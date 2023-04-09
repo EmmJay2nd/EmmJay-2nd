@@ -1,0 +1,55 @@
+import UIKit
+import SpriteKit
+
+class GameViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Skapa en ny instans av spelet
+        let scene = GameScene(size: view.bounds.size)
+        
+        // Konfigurera vyn
+        let skView = view as! SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        
+        // Visa spelet i vyn
+        skView.presentScene(scene)
+    }
+}
+
+class GameScene: SKScene {
+    
+    // Skapa en gubbe och en boll
+    var player = SKSpriteNode(imageNamed: "player")
+    var ball = SKSpriteNode(imageNamed: "ball")
+    
+    // Skapa en variabel för poängen
+    var score = 0
+    
+    override func didMove(to view: SKView) {
+        // Placera spelaren och bollen på skärmen
+        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.5)
+        ball.position = CGPoint(x: size.width * 0.8, y: size.height * 0.5)
+        
+        // Lägg till spelaren och bollen till scenen
+        addChild(player)
+        addChild(ball)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Kolla om spelaren rör bollen
+        for touch in touches {
+            let location = touch.location(in: self)
+            if player.contains(location) {
+                // Plocka upp bollen och öka poängen
+                ball.removeFromParent()
+                score += 1
+            }
+        }
+        
+        // Uppdatera storleken på spelaren baserat på poängen
+        player.size = CGSize(width: 50 + score * 5, height: 50 + score * 5)
+    }
+}
